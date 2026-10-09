@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1ea">
+  <meta name="description" content="Makaya Clavell est auteur, basé à Paris. Écriture située, identités, territoires et mémoires.">
+  <meta name="robots" content="index,follow">
+  <title>Makaya Clavell — Auteur</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23111111'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --paper: #f4f1ea;
+      --ink: #111111;
+      --muted: rgba(17,17,17,.55);
+      --line: rgba(17,17,17,.22);
+      --card-stroke: #000000;
+      --pad: clamp(16px, 2.4vw, 34px);
+      --sans: Arial, Helvetica, sans-serif;
+      --serif: Georgia, 'Times New Roman', serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--paper); color: var(--ink); }
+    body {
+      margin: 0;
+      min-height: 100svh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, a { color: inherit; }
+    button { font: inherit; }
+    a { text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    :focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+
+    .site {
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: var(--pad);
+      gap: clamp(22px, 4vw, 52px);
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(150px, .55fr) minmax(280px, 1.45fr) auto;
+      gap: clamp(18px, 4vw, 72px);
+      align-items: start;
+    }
+
+    .name,
+    .about-open,
+    .meta,
+    .counter,
+    .nav-button,
+    .shuffle-button,
+    .modal-label,
+    .publication-list,
+    .contact-list {
+      font-size: 12px;
+      line-height: 1.18;
+      letter-spacing: .01em;
+    }
+
+    .name { font-weight: 700; }
+    .intro {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(15px, 1.35vw, 21px);
+      line-height: 1.18;
+      letter-spacing: -.015em;
+    }
+
+    .about-open,
+    .nav-button,
+    .shuffle-button,
+    .modal-close {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+    }
+    .about-open { text-decoration: underline; text-underline-offset: 3px; }
+
+    .stage {
+      min-height: min(62svh, 720px);
+      width: calc(100% - 14px);
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      position: relative;
+      overflow: visible;
+      padding: clamp(18px, 2.8vw, 38px);
+      margin: 0 14px 14px 0;
+      border: 1.5px solid var(--card-stroke);
+      background: var(--paper);
+      box-shadow:
+        7px 7px 0 -1.5px var(--paper),
+        7px 7px 0 0 var(--card-stroke),
+        14px 14px 0 -1.5px var(--paper),
+        14px 14px 0 0 var(--card-stroke);
+    }
+
+    .slide {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(22px, 4vw, 58px);
+      width: min(100%, 1500px);
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 190ms ease, transform 190ms ease;
+    }
+    .slide.is-leaving { opacity: 0; transform: translateY(8px); }
+
+    .quote-wrap {
+      max-width: 1320px;
+    }
+    .quote {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(42px, 7.8vw, 128px);
+      line-height: .94;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+    .quote::before { content: '«\00a0'; }
+    .quote::after { content: '\00a0»'; }
+
+    .slide-details {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px;
+    }
+    .title {
+      margin: 0 0 4px 0;
+      font-size: 13px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+    .meta { color: var(--muted); }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      gap: 20px;
+    }
+    .controls-left,
+    .controls-right { display: flex; align-items: center; gap: 18px; }
+    .counter { min-width: 48px; font-variant-numeric: tabular-nums; }
+    .shuffle-button { min-width: 28px; min-height: 28px; }
+    .nav-button {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 24px;
+      line-height: 1;
+      transition: background 140ms ease, color 140ms ease, transform 140ms ease;
+    }
+    .nav-button:hover {
+      background: transparent;
+      color: var(--ink);
+      transform: scale(1.04);
+    }
+    .nav-button:active { transform: scale(.96); }
+    .shuffle-button:hover,
+    .about-open:hover { opacity: .5; }
+    .hint { color: var(--muted); font-size: 11px; line-height: 1.2; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      background: var(--paper);
+      overflow: auto;
+    }
+    .modal[aria-hidden="false"] { display: block; }
+    .modal-inner {
+      min-height: 100%;
+      padding: var(--pad);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(34px, 7vw, 90px);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+    .modal-close {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.1fr) minmax(220px, .75fr) minmax(220px, .75fr);
+      gap: clamp(32px, 6vw, 100px);
+      align-content: start;
+    }
+    .about-copy {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(28px, 4.2vw, 66px);
+      line-height: 1.02;
+      letter-spacing: -.035em;
+      max-width: 900px;
+    }
+    .modal-label {
+      display: block;
+      margin-bottom: 16px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .publication-list,
+    .contact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .publication-list li,
+    .contact-list li {
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+    }
+    .publication-list li:last-child,
+    .contact-list li:last-child { border-bottom: 1px solid var(--line); }
+    .pub-title { display: block; font-weight: 700; margin-bottom: 2px; }
+    .pub-meta { color: var(--muted); }
+    .email-placeholder { color: var(--muted); font-style: italic; }
+
+    .modal-foot {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .noscript {
+      margin: 20px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    @media (max-width: 780px) {
+      .site { gap: 26px; }
+      .topbar {
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+      }
+      .intro {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        max-width: 100%;
+      }
+      .stage {
+        min-height: 56svh;
+        width: calc(100% - 10px);
+        align-items: center;
+        padding: 18px;
+        margin: 0 10px 10px 0;
+        box-shadow:
+          5px 5px 0 -1.5px var(--paper),
+          5px 5px 0 0 var(--card-stroke),
+          10px 10px 0 -1.5px var(--paper),
+          10px 10px 0 0 var(--card-stroke);
+      }
+      .quote { font-size: clamp(38px, 12.5vw, 76px); }
+      .slide-details { grid-template-columns: 1fr; gap: 10px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-copy { max-width: 100%; }
+      .hint { display: none; }
+      .nav-button { width: 46px; height: 46px; font-size: 23px; }
+      .controls-right { gap: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="site" id="site">
+    <header class="topbar">
+      <div class="name">Makaya Clavell</div>
+      <p class="intro">Makaya Clavell est auteur, basé à Paris. Il pratique une écriture située, où il aborde les concepts d’identités, de territoires et de mémoires. En itinérance, il parcourt les périphéries à pied et en vélo. Ces errances alimentent ses récits.</p>
+      <button class="about-open" id="aboutOpen" type="button" aria-haspopup="dialog" aria-controls="aboutModal">À propos</button>
+    </header>
+
+    <section class="stage" aria-live="polite" aria-label="Extraits de textes">
+      <article class="slide" id="slide">
+        <div class="quote-wrap"><p class="quote" id="quote"></p></div>
+        <div class="slide-details">
+          <div>
+            <h1 class="title" id="title"></h1>
+            <div class="meta" id="meta"></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <nav class="controls" aria-label="Navigation du diaporama">
+      <div class="controls-left">
+        <span class="counter" id="counter">01 / 01</span>
+        <button class="shuffle-button" id="shuffle" type="button" aria-label="Mélanger les extraits" title="Mélanger les extraits">↻</button>
+        <span class="hint">← → clavier · glisser sur mobile</span>
+      </div>
+      <div class="controls-right">
+        <button class="nav-button" id="prev" type="button" aria-label="Extrait précédent">←</button>
+        <button class="nav-button" id="next" type="button" aria-label="Extrait suivant">→</button>
+      </div>
+    </nav>
+  </main>
+
+  <section class="modal" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle" aria-hidden="true">
+    <div class="modal-inner">
+      <header class="modal-head">
+        <div class="name" id="aboutTitle">Makaya Clavell — À propos</div>
+        <button class="modal-close" id="aboutClose" type="button" aria-label="Fermer la fenêtre À propos">×</button>
+      </header>
+
+      <div class="about-grid">
+        <div>
+          <span class="modal-label">À propos</span>
+          <p class="about-copy">Je m'appelle Marvin, c'est mon prénom. Mon nom, Makaya Clavell, est un itinéraire. Un voyage entre identités et parcours de vies, migrations sur migrations.</p>
+        </div>
+
+        <div>
+          <span class="modal-label">Publications</span>
+          <ul class="publication-list">
+            <li><span class="pub-title">Revue Zéro</span><span class="pub-meta">2019 · Paris</span></li>
+            <li><span class="pub-title">Trombone 02</span><span class="pub-meta">2022 · Pantin</span></li>
+            <li><span class="pub-title">Le Manifeste rouge du faux esthète</span><span class="pub-meta">Auto-édition · Paris</span></li>
+            <li><span class="pub-title">My visual memory by Google</span><span class="pub-meta">2018 · Paris</span></li>
+          </ul>
+        </div>
+
+        <div>
+          <span class="modal-label">Contact</span>
+          <ul class="contact-list">
+            <li>
+              <span class="pub-title">Email</span>
+              <!-- À REMPLACER AVANT MISE EN LIGNE : aucune adresse e-mail publique n'a été retrouvée sur le site actuel. -->
+              <span class="email-placeholder">adresse à renseigner</span>
+            </li>
+            <li><span class="pub-title">Localisation</span><span class="pub-meta">Paris</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="modal-foot">Textes complets retirés de la consultation en ligne — extraits uniquement.</footer>
+    </div>
+  </section>
+
+  <noscript><div class="noscript">Ce site utilise un peu de JavaScript pour mélanger et faire défiler les extraits.</div></noscript>
+
+  <script>
+    /*
+      ================================================================
+      CONTENU — MODIFIER UNIQUEMENT extraits.csv
+      ================================================================
+
+      Colonnes du CSV :
+      titre, meta, apparitions, mode, actif, extrait
+
+      - apparitions : nombre total maximum de slides pour ce texte.
+      - mode=manuel : l'extrait est prioritaire et sera toujours affiché
+        tant que le nombre d'extraits manuels ne dépasse pas `apparitions`.
+      - mode=auto : complète aléatoirement les places restantes.
+      - actif=1 : l'extrait est utilisable. Mettre 0 pour le masquer sans le supprimer.
+
+      Exemple : apparitions=4 avec 2 lignes `manuel` + 6 lignes `auto`
+      => les 2 manuels sont toujours présents + 2 autos choisis au hasard.
+
+      Le CSV est chargé depuis ./extraits.csv. Sur GitHub Pages cela fonctionne
+      directement. Pour prévisualiser localement, utiliser un petit serveur HTTP :
+      python3 -m http.server 8000
+    */
+
+    const quote = document.getElementById('quote');
+    const title = document.getElementById('title');
+    const meta = document.getElementById('meta');
+    const counter = document.getElementById('counter');
+    const slide = document.getElementById('slide');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const shuffle = document.getElementById('shuffle');
+    const aboutOpen = document.getElementById('aboutOpen');
+    const aboutClose = document.getElementById('aboutClose');
+    const aboutModal = document.getElementById('aboutModal');
+
+    let POSTS = [];
+    let slides = [];
+    let index = 0;
+    let lastFocus = null;
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let field = '';
+      let quoted = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"') {
+          if (quoted && next === '"') {
+            field += '"';
+            i++;
+          } else {
+            quoted = !quoted;
+          }
+        } else if (char === ',' && !quoted) {
+          row.push(field);
+          field = '';
+        } else if ((char === '\n' || char === '\r') && !quoted) {
+          if (char === '\r' && next === '\n') i++;
+          row.push(field);
+          if (row.some(cell => cell.trim() !== '')) rows.push(row);
+          row = [];
+          field = '';
+        } else {
+          field += char;
+        }
+      }
+
+      if (field.length || row.length) {
+        row.push(field);
+        if (row.some(cell => cell.trim() !== '')) rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function rowsToPosts(rows) {
+      if (rows.length < 2) return [];
+      const headers = rows[0].map(h => h.replace(/^\uFEFF/, '').trim().toLowerCase());
+      const idx = Object.fromEntries(headers.map((h, i) => [h, i]));
+      const grouped = new Map();
+
+      for (const row of rows.slice(1)) {
+        const titleValue = (row[idx.titre] || '').trim();
+        const excerpt = (row[idx.extrait] || '').trim();
+        const active = (row[idx.actif] ?? '1').trim().toLowerCase();
+        if (!titleValue || !excerpt || ['0','non','false','off'].includes(active)) continue;
+
+        const key = `${titleValue}|||${(row[idx.meta] || '').trim()}`;
+        if (!grouped.has(key)) {
+          const appearancesRaw = parseInt((row[idx.apparitions] || '1').trim(), 10);
+          grouped.set(key, {
+            title: titleValue,
+            meta: (row[idx.meta] || '').trim(),
+            appearances: Number.isFinite(appearancesRaw) ? Math.max(1, appearancesRaw) : 1,
+            manual: [],
+            auto: []
+          });
+        }
+
+        const post = grouped.get(key);
+        const mode = (row[idx.mode] || 'auto').trim().toLowerCase();
+        if (mode === 'manuel' || mode === 'manual') post.manual.push(excerpt);
+        else post.auto.push(excerpt);
+      }
+
+      return [...grouped.values()];
+    }
+
+    const FALLBACK_CSV = "titre,meta,apparitions,mode,actif,extrait\nDESAYUNAR,Oriflamme sous hélicos en feu · 2023,1,manuel,1,\"Que décider, où aller ? Où nous dormirons ce soir.\"\nDESAYUNAR,Oriflamme sous hélicos en feu · 2023,1,auto,1,\"Passer devant la glace. Constater, apprendre à s’aimer.\"\nDESAYUNAR,Oriflamme sous hélicos en feu · 2023,1,auto,1,Un café bien noir. Et toujours le parloir.\nUN BUS DANS LA VILLE,Oriflamme sous hélicos en feu · 2023,1,manuel,1,\"Les bâtis défilent, des terrasses, du vert, du vide.\"\nUN BUS DANS LA VILLE,Oriflamme sous hélicos en feu · 2023,1,auto,1,\"Il faut creuser un chemin pour commencer, puis on finit par s’asseoir.\"\nUN BUS DANS LA VILLE,Oriflamme sous hélicos en feu · 2023,1,auto,1,\"Même là-bas, même en bas, même.\"\nDina Arobin,Mars 2024,4,manuel,1,C’est jour de marché.\nDina Arobin,Mars 2024,4,manuel,1,\"Les souvenirs sont partout, c’est dans les fissures qu’ils se glissent.\"\nDina Arobin,Mars 2024,4,auto,1,Le chocolat blanc a un goût de miel.\nDina Arobin,Mars 2024,4,auto,1,Termine ton poisson.\nLe Tour de la ville,Octobre 2023,2,manuel,1,\"Sept ans, je fais le tour de la ville.\"\nLe Tour de la ville,Octobre 2023,2,auto,1,Je suis ceinture jaune.\nLe Tour de la ville,Octobre 2023,2,auto,1,On passe nos journées à imiter les Yamakasi.\nLa Ligne bleue,Novembre 2023,5,manuel,1,Le badge nous rend disponibles. À tout le monde.\nLa Ligne bleue,Novembre 2023,5,manuel,1,La fourmilière doit rester bien arrangée.\nLa Ligne bleue,Novembre 2023,5,auto,1,La badgeuse ne blague pas.\nLa Ligne bleue,Novembre 2023,5,auto,1,Elles décident de tout ici.\nLa Ligne bleue,Novembre 2023,5,auto,1,\"Même à ne rien faire, le temps reste le même.\"\nJusqu’à la dernière course,\"Extrait de Kaio, un pari miséreux et d’autres nouvelles · Avril 2023\",4,manuel,1,C’est pour pas finir comme lui que je conduis.\nJusqu’à la dernière course,\"Extrait de Kaio, un pari miséreux et d’autres nouvelles · Avril 2023\",4,manuel,1,\"Toujours croire en ses rêves, toujours !\"\nJusqu’à la dernière course,\"Extrait de Kaio, un pari miséreux et d’autres nouvelles · Avril 2023\",4,auto,1,\"De l’utile à l’agréable, j’aimais bien.\"\nJusqu’à la dernière course,\"Extrait de Kaio, un pari miséreux et d’autres nouvelles · Avril 2023\",4,auto,1,Une minute compte double.\nUn prince parmi les tutus,2023,3,manuel,1,\"Nous avions compris, mais nous ne savions pas.\"\nUn prince parmi les tutus,2023,3,auto,1,Mon frère s’appelle Marden.\nUn prince parmi les tutus,2023,3,auto,1,\"Une nouvelle bagarre avait débuté, où nous étions cette fois-ci du même côté.\"\nUn prince parmi les tutus,2023,3,auto,1,Il rayonne enfin après de longues années.\nUn pari miséreux,2022,3,manuel,1,\"Dans cette traversée, l’obscurité sera notre seule alliée.\"\nUn pari miséreux,2022,3,auto,1,\"Entre volupté et survie, il n’y a qu’un pas.\"\nUn pari miséreux,2022,3,auto,1,\"Sans travail en France, j’avais choisi de migrer. Pour l’argent.\"\n\"Danser, est ce taire un cri ?\",2022 · publié dans Trombone 02,4,manuel,1,\"Je vous attendais les copains. Ce soir-là, elles dansaient.\"\n\"Danser, est ce taire un cri ?\",2022 · publié dans Trombone 02,4,manuel,1,\"Mes pieds rebondissent sur le parquet, automatiques.\"\n\"Danser, est ce taire un cri ?\",2022 · publié dans Trombone 02,4,auto,1,\"Elle résonne, la fête.\"\n\"Danser, est ce taire un cri ?\",2022 · publié dans Trombone 02,4,auto,1,Et ce toute la nuit.\n\"Danser, est ce taire un cri ?\",2022 · publié dans Trombone 02,4,auto,1,Un cri nécessaire oui.\nPourquoi fuit-il ?,2021,2,manuel,1,\"Bien trop souvent, il devient coupable.\"\nPourquoi fuit-il ?,2021,2,auto,1,Les sentiers réglementés vers la pensée se font bien plus rares.\nPourquoi fuit-il ?,2021,2,auto,1,Il se retrouve bloqué.\nPourquoi fuit-il ?,2021,2,auto,1,\"Menacé, il court.\"\nTerre(s),\"Extrait de À la gloire de mon père, version sud · 2021\",4,manuel,1,\"De la terre, je ne suis jamais parti. De ma terre.\"\nTerre(s),\"Extrait de À la gloire de mon père, version sud · 2021\",4,manuel,1,Je veux que ma terre raconte ses ressentis.\nTerre(s),\"Extrait de À la gloire de mon père, version sud · 2021\",4,auto,1,\"Je les trouve belles, mes deux terres, mais j’aimerais cette beauté moins sage.\"\nTerre(s),\"Extrait de À la gloire de mon père, version sud · 2021\",4,auto,1,Foutue télé !\n";
+
+    async function loadPosts() {
+      let text = '';
+      let source = 'csv';
+
+      try {
+        const csvUrl = new URL('extraits.csv', window.location.href);
+        const response = await fetch(csvUrl, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        text = await response.text();
+      } catch (error) {
+        source = 'fallback';
+        text = FALLBACK_CSV;
+        console.warn('extraits.csv inaccessible : utilisation du contenu de secours intégré.', error);
+      }
+
+      POSTS = rowsToPosts(parseCSV(text));
+      if (!POSTS.length) throw new Error('Aucun extrait actif trouvé dans extraits.csv');
+
+      document.documentElement.dataset.contentSource = source;
+    }
+
+    function spreadSameTitles(arr) {
+      const pool = [...arr];
+      const result = [];
+
+      while (pool.length) {
+        const previousTitle = result.at(-1)?.title;
+        let candidates = pool
+          .map((item, i) => ({ item, i }))
+          .filter(({ item }) => item.title !== previousTitle);
+
+        if (!candidates.length) candidates = pool.map((item, i) => ({ item, i }));
+        const choice = candidates[Math.floor(Math.random() * candidates.length)];
+        result.push(choice.item);
+        pool.splice(choice.i, 1);
+      }
+
+      return result;
+    }
+
+    function makeSlides() {
+      const allSlides = POSTS.flatMap((post, postIndex) => {
+        const manual = [...new Set(post.manual.map(x => x.trim()).filter(Boolean))];
+        const auto = [...new Set(post.auto.map(x => x.trim()).filter(Boolean))]
+          .filter(x => !manual.includes(x));
+
+        const maxCount = Math.max(1, post.appearances || 1);
+        const chosenManual = manual.slice(0, maxCount);
+        const remaining = Math.max(0, maxCount - chosenManual.length);
+        const chosenAuto = shuffleArray(auto).slice(0, remaining);
+        const chosen = [...chosenManual, ...chosenAuto];
+
+        return chosen.map((excerpt, excerptIndex) => ({
+          title: post.title,
+          meta: post.meta,
+          excerpt,
+          postIndex,
+          excerptIndex,
+          curated: excerptIndex < chosenManual.length
+        }));
+      });
+
+      slides = spreadSameTitles(shuffleArray(allSlides));
+      index = 0;
+      render(false);
+    }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function render(animate = true) {
+      const current = slides[index];
+      if (!current) return;
+
+      const update = () => {
+        quote.textContent = current.excerpt;
+        title.textContent = current.title;
+        meta.textContent = current.meta;
+        counter.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
+        slide.classList.remove('is-leaving');
+      };
+
+      if (!animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        update();
+        return;
+      }
+
+      slide.classList.add('is-leaving');
+      window.setTimeout(update, 150);
+    }
+
+    function go(step) {
+      if (!slides.length) return;
+      index = (index + step + slides.length) % slides.length;
+      render();
+    }
+
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    shuffle.addEventListener('click', makeSlides);
+
+    function openAbout() {
+      lastFocus = document.activeElement;
+      aboutModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      aboutClose.focus();
+    }
+
+    function closeAbout() {
+      aboutModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    }
+
+    aboutOpen.addEventListener('click', openAbout);
+    aboutClose.addEventListener('click', closeAbout);
+    aboutModal.addEventListener('click', (event) => {
+      if (event.target === aboutModal) closeAbout();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const modalOpen = aboutModal.getAttribute('aria-hidden') === 'false';
+      if (event.key === 'Escape' && modalOpen) {
+        closeAbout();
+        return;
+      }
+      if (modalOpen) return;
+      if (event.key === 'ArrowRight') go(1);
+      if (event.key === 'ArrowLeft') go(-1);
+    });
+
+    let touchStartX = null;
+    const stage = document.querySelector('.stage');
+    stage.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'touch' || event.pointerType === 'pen') touchStartX = event.clientX;
+    });
+    stage.addEventListener('pointerup', (event) => {
+      if (touchStartX === null) return;
+      const delta = event.clientX - touchStartX;
+      touchStartX = null;
+      if (Math.abs(delta) < 44) return;
+      go(delta < 0 ? 1 : -1);
+    });
+
+    async function init() {
+      try {
+        await loadPosts();
+        makeSlides();
+      } catch (error) {
+        quote.textContent = 'Les extraits n’ont pas pu être chargés.';
+        title.textContent = 'Erreur de contenu';
+        meta.textContent = `${error.message} — vérifie que extraits.csv est au même niveau que index.html.`;
+        counter.textContent = '00 / 00';
+        console.error(error);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
